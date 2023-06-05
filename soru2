@@ -1,0 +1,101 @@
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module soru2 #(parameter c_clkfreq = 100000000)(
+
+input clk,
+input rst,
+input [9:0]start_post_i,
+input [9:0]dest_pos_i,
+input [7:0]start_vel_i,
+input [7:0]vel_i,
+output reg reached_o,
+output reg [9:0] pos_o,
+output reg [15:0] dest_reach_second_o
+);
+
+reg [9:0] sp,dp;
+reg [7:0] v;
+
+reg reached;
+reg [9:0] pos;
+reg [15:0] dest_reach_second;
+
+
+reg [$clog2(c_clkfreq)-1:0]  saniye ;
+reg saniye_degisim;
+
+
+// bu blokta  1 saniye oldugunu anlamami sagliycak ve sonrasinda 1 ve 0 olarak degisicek saniye_degisim adinda bir devre tasarlamaya calistim.
+// kisacasi her 0.5 saniyede bir saniye_degisim sinyali 1 olur sonrasinda 0 olur. 
+always@(negedge clk)begin
+
+saniye_degisim <= 1'b0;
+
+if (saniye==1)begin
+
+saniye <= 0;
+saniye_degisim <= 1'b1;
+
+end else begin
+
+saniye = saniye + 1'b1;
+
+end 
+ 
+end
+
+// bu modülün 1 saniye calistigini varsayarak anlik olarak hiz bilgisini güncelledim ve her clockta position bilgisiyle topladým. Position tasarým botunca sürekli güncellenmesi için herhangi bir sarta baglamadým.
+//  hedege ulasýldýktan sonra  dest_reach_second_o yu güncellemedim ve reached_0 yu 1 e eþiledim 
+
+always @(negedge saniye_degisim,posedge rst)begin 
+
+if (rst == 1) begin 
+
+sp <= start_post_i;
+dp <= dest_pos_i;
+v <= start_vel_i;
+
+ reached<=0;
+ pos<=0;
+ dest_reach_second<=0;
+
+
+end else begin 
+
+
+v<=vel_i;
+pos<= v + sp + pos;
+
+end 
+if (pos>=dp) begin 
+
+reached<= 1;
+
+if (reached == 1) begin 
+
+dest_reach_second_o <= dest_reach_second;
+
+end 
+
+end else begin 
+
+dest_reach_second <= dest_reach_second + 1'b1;
+
+end
+
+reached_o<=reached;
+
+pos_o<=pos;
+
+end
+ 
+
+endmodule
