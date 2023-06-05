@@ -1,0 +1,72 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 12/16/2022 04:31:46 PM
+// Design Name: 
+// Module Name: soru3
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module soru3 #(parameter c_clkfreq =100000000) (
+input clk,
+input rst,
+input signal_i,
+output reg signal_o
+    );
+
+ 
+reg i,o;
+    
+reg [$clog2(c_clkfreq/1000)-1:0] t;
+reg t_degisim;
+
+// soru ikide de kullandýgým saat modelini kullandim. Amacim her 0.5 ms de bir degisen bir clock yapmamkti. 
+    
+always@( posedge clk)begin
+
+t_degisim <= 1'b0;
+
+if (t==1)begin
+
+t <= 0;
+t_degisim <= 1'b1;
+
+end else begin
+
+t = t + 1'b1;
+
+end 
+ 
+end
+
+// inputu outputa ulastirdim
+    
+always @( posedge rst ,posedge t_degisim) begin
+    
+if (rst==1)begin 
+
+    o<=0;
+    i<=0;
+    
+    end else begin
+    
+    i<=signal_i;
+    o<=i;
+    signal_o<=o;
+    end
+end    
+    
+endmodule
