@@ -1,0 +1,58 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 12/16/2022 02:56:08 PM
+// Design Name: 
+// Module Name: soru1
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module soru1(
+
+input [4:0] number1_i,
+input [4:0] number2_i,
+
+output reg [8:0] mult_o
+
+    );
+    
+    reg [4:0]n1,n2;
+    reg [8:0]m_s,m0,m1,m2,m3;
+    reg i;
+   
+   
+   // Normal çarpma iþlemi gibi bitleri sýrasýyla and leyip alt alta gelenleri toplarken eldelerle ugrasmamak icin m0,m1,m2 ve m3 diye çarpma iþlemi satirlarindaki sayilari dusundum. 
+   // Hepsini ayni bit yaptigim icin hangi bitlerini yazicagimi kontrol edip ondan sonra toplayip sonuca ulastim. 
+   // isaret biti eklemek icinde  mult_o = {i,m_s}; bu ifadede i nin en anlamlý bite yazilmasini kalanina da carpma sonucunu getirmeye calistim. 
+    
+    
+    always @(*) begin 
+    
+    m0[3:0] = n1[0] & n2;
+    m1[4:1] = n1[1] & n2;
+    m2[5:2] = n1[2] & n2;
+    m3[6:3] = n1[3] & n2;
+    
+    m_s = m0 + m1 + m2 + m3;
+     
+    i = n1[4]^n2[4];
+    
+    mult_o = {i,m_s};
+    
+    end
+    
+    
+endmodule
